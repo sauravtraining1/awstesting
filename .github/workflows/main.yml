@@ -1,7 +1,9 @@
-name: Github AWS OIDC
+name: Deploy AWS test
+
 on:
   push:
-    branches: [aws-oidc-test]
+    branches:
+      - aws-oidc-test
 
 permissions:
   id-token: write
@@ -9,16 +11,17 @@ permissions:
 
 jobs:
   oidc-test:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials using OIDC
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1
+          aws-region: ap-south-1
 
-      - name: Test AWS Credentials
+      - name: Verify AWS identity
         run: aws sts get-caller-identity
